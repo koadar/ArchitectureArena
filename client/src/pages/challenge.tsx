@@ -143,7 +143,7 @@ export default function Challenge() {
       const timeSpent = challenge ? (challenge.timeLimit * 60) - timeLeft : 0;
       updateBattleMutation.mutate({
         status: "COMPLETED",
-        completedAt: new Date().toISOString(),
+        completedAt: new Date(),
         timeSpent,
         architecture,
         score: calculateScore(),

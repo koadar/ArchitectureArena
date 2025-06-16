@@ -35,9 +35,10 @@ const componentCategories = [
 ];
 
 export default function ComponentLibrary() {
-  const handleComponentDrag = (componentId: string, componentName: string) => {
-    // This would integrate with React Flow's drag functionality
-    console.log("Dragging component:", componentId, componentName);
+  const onDragStart = (event: React.DragEvent, nodeType: string, label: string) => {
+    event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.setData('application/reactflow-label', label);
+    event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
@@ -65,7 +66,7 @@ export default function ComponentLibrary() {
                   key={component.id}
                   variant="outline"
                   className={`h-16 flex flex-col items-center justify-center text-xs glassmorphism hover:neon-glow transition-all cursor-grab active:cursor-grabbing ${component.color} hover:${component.color.replace('border', 'bg')}/10`}
-                  onMouseDown={() => handleComponentDrag(component.id, component.name)}
+                  onDragStart={(event) => onDragStart(event, component.id, component.name)}
                   draggable
                 >
                   <span className="text-lg mb-1">{component.icon}</span>

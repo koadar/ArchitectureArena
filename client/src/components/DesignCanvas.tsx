@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -10,6 +10,8 @@ import ReactFlow, {
   Background,
   MiniMap,
   BackgroundVariant,
+  ReactFlowProvider,
+  useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,11 +86,18 @@ const initialEdges: Edge[] = [
   },
 ];
 
-export default function DesignCanvas({ architecture, onChange, challenge }: DesignCanvasProps) {
+function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(architecture?.nodes || initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(architecture?.edges || initialEdges);
   const [loadSlider, setLoadSlider] = useState([25]);
   const [simulationRunning, setSimulationRunning] = useState(false);
+  const [simulationMetrics, setSimulationMetrics] = useState({
+    latency: 45,
+    throughput: 2.5,
+    cost: 12.34
+  });
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -102,26 +111,81 @@ export default function DesignCanvas({ architecture, onChange, challenge }: Desi
 
   const runSimulation = () => {
     setSimulationRunning(true);
-    // Simulate for 3 seconds
+    
+    // Animate metrics during simulation
+    const interval = setInterval(() => {
+      setSimulationMetrics({
+        latency: Math.max(10, Math.floor(45 + (Math.random() - 0.5) * 40)),
+        throughput: Math.max(0.5, (2.5 + (Math.random() - 0.5) * 2)),
+        cost: Math.max(5, (12.34 + (Math.random() - 0.5) * 10))
+      });
+    }, 200);
+    
+    // Stop simulation after 3 seconds
     setTimeout(() => {
       setSimulationRunning(false);
+      clearInterval(interval);
+      // Reset to stable values
+      setSimulationMetrics({
+        latency: 45,
+        throughput: 2.5,
+        cost: 12.34
+      });
     }, 3000);
   };
 
-  const getRandomMetric = (base: number, variance: number) => {
-    return base + (Math.random() - 0.5) * variance;
-  };
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData('application/reactflow');
+      const label = event.dataTransfer.getData('application/reactflow-label');
+
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      
+      const newNode: Node = {
+        id: `${Date.now()}`,
+        type: 'default',
+        position,
+        data: { label },
+        style: {
+          background: 'rgba(0, 209, 255, 0.1)',
+          border: '2px solid #00D1FF',
+          borderRadius: '8px',
+          color: '#fff',
+          padding: '10px',
+        },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [screenToFlowPosition, setNodes]
+  );
+
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
 
   return (
     <div className="h-full flex">
       {/* Main Canvas */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
           nodeTypes={nodeTypes}
           fitView
           className="bg-gray-900"
@@ -157,19 +221,19 @@ export default function DesignCanvas({ architecture, onChange, challenge }: Desi
             <div className="flex justify-between items-center">
               <span className="text-sm">Latency</span>
               <span className="text-sm font-mono text-green-400">
-                {simulationRunning ? `${Math.floor(getRandomMetric(45, 20))}ms` : '45ms'}
+                {simulationMetrics.latency}ms
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">Throughput</span>
               <span className="text-sm font-mono text-cyan-400">
-                {simulationRunning ? `${getRandomMetric(2.5, 1).toFixed(1)}K req/s` : '2.5K req/s'}
+                {simulationMetrics.throughput.toFixed(1)}K req/s
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">Cost/hour</span>
               <span className="text-sm font-mono text-pink-500">
-                {simulationRunning ? `$${getRandomMetric(12.34, 5).toFixed(2)}` : '$12.34'}
+                ${simulationMetrics.cost.toFixed(2)}
               </span>
             </div>
             
@@ -236,5 +300,13 @@ export default function DesignCanvas({ architecture, onChange, challenge }: Desi
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function DesignCanvas(props: DesignCanvasProps) {
+  return (
+    <ReactFlowProvider>
+      <DesignCanvasInner {...props} />
+    </ReactFlowProvider>
   );
 }
