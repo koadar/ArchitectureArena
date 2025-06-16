@@ -66,6 +66,69 @@ export default function Landing() {
             <Button 
               variant="outline" 
               className="glassmorphism px-8 py-4 text-lg hover:neon-glow transition-all"
+              onClick={() => {
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+                overlay.innerHTML = `
+                  <div class="bg-gray-900 border border-cyan-400 p-8 rounded-xl max-w-4xl w-full text-white">
+                    <h3 class="text-3xl font-bold mb-6 text-cyan-400">Architecture Arena Demo</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-cyan-400 rounded-full flex items-center justify-center text-black font-bold">1</div>
+                          <div>
+                            <h4 class="font-semibold text-cyan-400">Choose Your Challenge</h4>
+                            <p class="text-gray-300">Pick from 6 real-world system design challenges like "Design Netflix for Mars" or "Build a URL Shortener"</p>
+                          </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                          <div>
+                            <h4 class="font-semibold text-pink-500">Drag & Drop Components</h4>
+                            <p class="text-gray-300">Build your architecture by dragging components like Load Balancers, Databases, and CDNs onto the canvas</p>
+                          </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-black font-bold">3</div>
+                          <div>
+                            <h4 class="font-semibold text-green-400">Run Live Simulations</h4>
+                            <p class="text-gray-300">Test your design with real-time metrics: latency, throughput, and cost calculations</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold">4</div>
+                          <div>
+                            <h4 class="font-semibold text-yellow-400">Battle or Practice</h4>
+                            <p class="text-gray-300">Compete against the clock in Battle Mode or learn at your own pace in Practice Mode</p>
+                          </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">5</div>
+                          <div>
+                            <h4 class="font-semibold text-purple-500">Study Solutions</h4>
+                            <p class="text-gray-300">Learn from detailed answer keys with working prototypes and explanations</p>
+                          </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">6</div>
+                          <div>
+                            <h4 class="font-semibold text-orange-500">Track Progress</h4>
+                            <p class="text-gray-300">Climb the leaderboard, view your submission history, and unlock achievements</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                      <button onclick="window.location.href='/api/login'" class="bg-cyan-400 text-black px-6 py-3 rounded-xl font-semibold hover:bg-cyan-300 transition-all">Start Now</button>
+                      <button onclick="window.location.href='/challenge/1'" class="bg-pink-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-pink-400 transition-all">Try Demo Challenge</button>
+                      <button onclick="this.closest('.fixed').remove()" class="bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-500 transition-all">Close</button>
+                    </div>
+                  </div>
+                `;
+                document.body.appendChild(overlay);
+              }}
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />

@@ -9,6 +9,7 @@ import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import Challenge from "@/pages/challenge";
 import Leaderboard from "@/pages/leaderboard";
+import Tutorial from "@/pages/tutorial";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
