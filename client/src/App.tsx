@@ -23,6 +23,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/challenge/:id" component={Challenge} />
           <Route path="/leaderboard" component={Leaderboard} />
+          <Route path="/tutorial" component={Tutorial} />
         </>
       )}
       <Route component={NotFound} />
