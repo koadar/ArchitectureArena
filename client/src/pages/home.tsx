@@ -103,7 +103,15 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="card-cyber hover:border-cyan-400 transition-colors cursor-pointer">
+              <Card 
+                className="card-cyber hover:border-cyan-400 transition-colors cursor-pointer"
+                onClick={() => {
+                  if (challenges.length > 0) {
+                    const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+                    window.location.href = `/challenge/${randomChallenge.id}`;
+                  }
+                }}
+              >
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 cyber-gradient rounded-lg mx-auto mb-4 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -115,7 +123,15 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="card-cyber hover:border-pink-400 transition-colors cursor-pointer">
+              <Card 
+                className="card-cyber hover:border-pink-400 transition-colors cursor-pointer"
+                onClick={() => {
+                  if (challenges.length > 0) {
+                    const easyChallenge = challenges.find(c => c.difficulty === 'EASY') || challenges[0];
+                    window.location.href = `/challenge/${easyChallenge.id}`;
+                  }
+                }}
+              >
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-violet-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -129,13 +145,15 @@ export default function Home() {
 
               <Card className="card-cyber hover:border-yellow-400 transition-colors cursor-pointer">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold mb-2">Leaderboard</h3>
-                  <p className="text-sm text-gray-400">See your global ranking</p>
+                  <Link href="/leaderboard" className="block">
+                    <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold mb-2">Leaderboard</h3>
+                    <p className="text-sm text-gray-400">See your global ranking</p>
+                  </Link>
                 </CardContent>
               </Card>
             </div>

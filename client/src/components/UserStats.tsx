@@ -126,7 +126,13 @@ export default function UserStats({ stats }: UserStatsProps) {
       </Card>
 
       {/* Quick Actions */}
-      <Card className="card-cyber hover:border-yellow-400/50 transition-colors cursor-pointer group">
+      <Card 
+        className="card-cyber hover:border-yellow-400/50 transition-colors cursor-pointer group"
+        onClick={() => {
+          // Navigate to a random challenge
+          window.location.href = '/challenge/1'; // Default to first challenge
+        }}
+      >
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center justify-between">
             <span>Quick Battle</span>
