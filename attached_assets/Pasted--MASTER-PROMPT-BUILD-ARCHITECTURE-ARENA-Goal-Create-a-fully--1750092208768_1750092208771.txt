@@ -1,0 +1,103 @@
+### 📣 MASTER PROMPT: BUILD “ARCHITECTURE ARENA”  ███████████████████████
+
+Goal ➜  Create a fully-responsive, production-ready web app called **“Architecture Arena”**—the ultimate gamified playground where developers PRACTICE, SIMULATE, and COMPETE on real-world system-design challenges.  Think *LeetCode × Figma × SimCity × Twitch*.
+
+────────────────────────────────────────────────┤  CORE VIBES  ├────────────────────────────────────────────────
+• Look & Feel:  Sleek dark-mode default, neon accents, cyber-arena backdrop, subtle parallax, micro-animations (Framer Motion).  
+• Tone:  Bold, witty, insanely engaging—copy reads like an esports caster hyping a coding battle.  
+• Brand palette:  #00D1FF (electric cyan), #FF008C (magenta pop), gradient highlights, plenty of glassmorphism.  
+• Fonts:  Inter + JetBrains Mono combo.  
+• Logo:  Stylized 3-D arena with circuit traces morphing into cloud icons.
+
+──────────────────────────────────────────────┤  MUST-HAVE FEATURES  ├──────────────────────────────────────────
+1. **Drag-&-Drop Design Canvas**  
+   • Snap-in components: API Gateways, Load Balancers, Microservices, Databases, Caches, Message Brokers, Edge CDNs, ML models, etc.  
+   • Real-time metrics overlay (latency, throughput, cost/min).  
+   • Versioning & git-style diff of architecture diagrams.
+
+2. **Interactive Simulation Engine**  
+   • Traffic generator slider (1× to 1 000 000×).  
+   • Chaos toggle: region-down / network-partition / spike.  
+   • Live heat-map animation (nodes glow red under strain).  
+   • Auto-cost estimator (AWS/GCP/Azure APIs).
+
+3. **AI Co-Designer Sidekick** (ChatGPT-like panel)  
+   • Suggests missing components, flags SPOFs, proposes caching layers.  
+   • “Explain my diagram like I’m five” button.  
+   • One-click convert diagram → Terraform / CDK code snippet.
+
+4. **Battle Mode**  
+   • Timed challenges (30 min, 24 hr).  
+   • Public leaderboards with Elo-style rating.  
+   • Spectator “replay” view (timeline scrub of how a top player refined their design).
+
+5. **Scenario Library**  
+   • 200+ questions (basic to “Design Netflix for Mars”).  
+   • Tag filter (streaming, fintech, IoT, real-time gaming).  
+   • Company-specific tracks (Meta, Amazon, Grab, Swiggy).  
+   • Weekly “Boss Fight” mega-scenario with prize badges.
+
+6. **Showcase & Discussion Hub**  
+   • Up-vote, comment, fork others’ designs.  
+   • Markdown-plus-diagram posts (MDX).  
+   • Embedded Loom-style screen-recap import.
+
+7. **Learning Paths & Certification**  
+   • Tiered quests: Rookie → Architect → Chaos Guru.  
+   • Auto-issued NFTs / OpenBadges on completion; wallet optional.  
+   • Printable certificate + LinkedIn share button.
+
+8. **Collaboration & Pair-Design**  
+   • Live cursors, sticky notes, voice chat bubbles.  
+   • “Invite an interviewer” mode to run mock interviews.
+
+9. **Accessibility & Internationalization**  
+   • WCAG 2.2 AA compliance.  
+   • RTL & language switcher (EN, HI, ES, ZH).  
+   • Keyboard-only canvas operations.
+
+10. **Monetization Hooks**  
+    • Freemium: 10 free scenarios; premium subscription unlocks all + AI co-designer.  
+    • Team plans w/ SSO & private rooms.  
+    • Marketplace for community-made scenarios (rev-share).
+
+─────────────────────────────────────────────┤  TECH STACK (SUGGESTED)  ├─────────────────────────────────────────
+• **Next.js 14 / React Server Components** with Suspense.  
+• **tRPC** for typesafe end-to-end API.  
+• **PostgreSQL + Prisma**  
+• Real-time via **WebSockets (Socket.io)** or **Liveblocks**.  
+• **Excalidraw + SVG** for diagramming; render to canvas + export PNG/SVG/PDF.  
+• **Koord** / **Dagre** for auto-layout.  
+• **Three.js** hero animation on landing.  
+• **TailwindCSS** + shadcn/ui components.  
+• Auth: **Clerk.dev** (social logins, magic links).  
+• AI: **OpenAI Assistants API** + **LangChain** orchestration.  
+• Payments: **Stripe**.  
+• Deploy: **Vercel** + **Turso Edge DB** replicas for low-latency global.
+
+──────────────────────────────────────────────┤  KEY PAGES / FLOWS  ├──────────────────────────────────────────
+1. **Landing Page** – Hero animation, instant “Try a Challenge” CTA, rolling ticker of live battles.  
+2. **Arena Dashboard** – Cards for current quests, rank, streak.  
+3. **Challenge Detail** – Problem statement, constraints toggle, timer.  
+4. **Design Studio** – The canvas + side panels (components, AI tips, simulation stats).  
+5. **Replay Theater** – Timeline scrubber, step-through diff, voiceover.  
+6. **Profile** – Badges wall, activity heatmap, “My Architect Journey” graph.  
+7. **Marketplace** – Community scenarios, filters, ratings, buy button.  
+8. **Docs** – API, keyboard shortcuts, design-review rubric.
+
+────────────────────────────────────────────┤  WILD EXTRAS (OPTIONAL)  ├────────────────────────────────────────
+• **AR Mode** (WebXR): project the architecture as floating 3-D nodes you walk around.  
+• **Twitch-style Extensions**: stream a live design session; viewers drop “curveballs” (e.g., “30% cost cut NOW!”).  
+• **Voice-to-Diagram**: describe architecture verbally → auto-generate nodes.  
+• “**Chaos Monkey**” Easter egg—randomly kills a microservice every 60 sec in simulation.  
+• **Cost-War Room**: negotiate budget versus SLA, slider shows sweet-spot curve.  
+• **IRL Interview Prep Pack**: printable PDF cheat-sheets & flashcards.
+
+────────────────────────────────────────────────┤  DELIVERY NOTES  ├────────────────────────────────────────────────
+• Generate full codebase skeleton with proper file structure, reusable components, Storybook docs.  
+• Seed the DB with 25 sample scenarios & 5 replay demos.  
+• Ship minimal viable product in ONE repo; include README with local dev instructions + Vercel deploy button.  
+• Add Cypress end-to-end tests for canvas drag, simulate, save.  
+• Include a 60-second onboarding tour built with Shepherd.js.
+
+██████████████████████  END OF PROMPT  ██████████████████████
