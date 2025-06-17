@@ -6,7 +6,7 @@ import ChallengeCard from "@/components/ChallengeCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import type { Challenge } from "@shared/schema";
+import type { Challenge, Battle } from "@shared/schema";
 
 export default function Home() {
   const { user } = useAuth();
@@ -15,11 +15,20 @@ export default function Home() {
     queryKey: ["/api/challenges"],
   });
 
-  const { data: userStats } = useQuery({
+  interface UserStatsData {
+    battlesWon: number;
+    currentStreak: number;
+    winRate: number;
+    totalBattles: number;
+    avgCompletionTime: number;
+    xpToNextTier: number;
+  }
+
+  const { data: userStats } = useQuery<UserStatsData>({
     queryKey: ["/api/user/stats"],
   });
 
-  const { data: userBattles = [] } = useQuery({
+  const { data: userBattles = [] } = useQuery<Battle[]>({
     queryKey: ["/api/battles/user"],
   });
 

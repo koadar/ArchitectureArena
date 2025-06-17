@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
+import type { Editorial, Challenge } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,12 +13,12 @@ export default function EditorialPage() {
   const [match, params] = useRoute("/editorial/:id");
   const challengeId = params?.id;
 
-  const { data: editorial, isLoading: editorialLoading } = useQuery({
+  const { data: editorial, isLoading: editorialLoading } = useQuery<Editorial>({
     queryKey: ["/api/editorials", challengeId],
     enabled: !!challengeId,
   });
 
-  const { data: challenge, isLoading: challengeLoading } = useQuery({
+  const { data: challenge, isLoading: challengeLoading } = useQuery<Challenge>({
     queryKey: ["/api/challenges", challengeId],
     enabled: !!challengeId,
   });
@@ -96,10 +97,6 @@ export default function EditorialPage() {
             <div className="flex items-center gap-2 text-slate-300">
               <Trophy className="h-4 w-4" />
               <span className="text-sm">{challenge?.xpReward || 0} points</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Users className="h-4 w-4" />
-              <span className="text-sm">{editorial?.completionRate || 0}% completion</span>
             </div>
             <div className="flex items-center gap-2 text-slate-300">
               <Zap className="h-4 w-4" />

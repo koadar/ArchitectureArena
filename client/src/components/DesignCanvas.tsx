@@ -409,16 +409,16 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
             <h3 className="font-semibold mb-2 text-white bg-slate-800/50 p-2 rounded">{challenge.title}</h3>
             <p className="text-xs text-gray-300 mb-4 bg-slate-800/30 p-2 rounded">{challenge.description}</p>
             
-            {challenge.constraints && (
-              <div>
-                <h4 className="text-xs font-semibold mb-2 text-cyan-400">Constraints:</h4>
-                <div className="text-xs text-gray-300 bg-gray-800 p-2 rounded">
-                  <pre className="whitespace-pre-wrap">
-                    {JSON.stringify(challenge.constraints, null, 2)}
-                  </pre>
+              {Boolean(challenge.constraints) && (
+                <div>
+                  <h4 className="text-xs font-semibold mb-2 text-cyan-400">Constraints:</h4>
+                  <div className="text-xs text-gray-300 bg-gray-800 p-2 rounded">
+                    <pre className="whitespace-pre-wrap">
+                      {JSON.stringify(challenge.constraints as any, null, 2)}
+                    </pre>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </CardContent>
         </Card>
       </div>
