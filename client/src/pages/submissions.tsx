@@ -79,7 +79,7 @@ export default function Submissions() {
                     <div className="flex items-center gap-2 text-slate-300">
                       <Calendar className="h-4 w-4" />
                       <span className="text-sm">
-                        {format(new Date(submission.submittedAt), "MMM dd, yyyy")}
+                        {format(new Date(submission.submissionTime), "MMM dd, yyyy")}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-300">

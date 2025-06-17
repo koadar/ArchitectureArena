@@ -45,8 +45,8 @@ export interface IStorage {
   
   // Submission operations
   createSubmission(submission: InsertSubmission): Promise<Submission>;
-  getUserSubmissions(userId: string): Promise<Submission[]>;
-  getChallengeSubmissions(challengeId: number, userId: string): Promise<Submission[]>;
+  getUserSubmissions(userId: string): Promise<(Submission & { challengeTitle: string | null; difficulty: string | null; completionTime: number | null; })[]>;
+  getChallengeSubmissions(challengeId: number, userId: string): Promise<(Submission & { challengeTitle: string | null; difficulty: string | null; completionTime: number | null; })[]>;
   
   // Tutorial progress operations
   getTutorialProgress(userId: string): Promise<TutorialProgress[]>;
@@ -160,18 +160,48 @@ export class DatabaseStorage implements IStorage {
     return submission;
   }
 
-  async getUserSubmissions(userId: string): Promise<Submission[]> {
+  async getUserSubmissions(userId: string): Promise<(Submission & { challengeTitle: string | null; difficulty: string | null; completionTime: number | null; })[]> {
     return await db
-      .select()
+      .select({
+        id: submissions.id,
+        userId: submissions.userId,
+        challengeId: submissions.challengeId,
+        battleId: submissions.battleId,
+        architecture: submissions.architecture,
+        status: submissions.status,
+        score: submissions.score,
+        feedback: submissions.feedback,
+        submissionTime: submissions.submissionTime,
+        challengeTitle: challenges.title,
+        difficulty: challenges.difficulty,
+        completionTime: battles.timeSpent,
+      })
       .from(submissions)
+      .leftJoin(challenges, eq(submissions.challengeId, challenges.id))
+      .leftJoin(battles, eq(submissions.battleId, battles.id))
       .where(eq(submissions.userId, userId))
       .orderBy(desc(submissions.submissionTime));
   }
 
-  async getChallengeSubmissions(challengeId: number, userId: string): Promise<Submission[]> {
+  async getChallengeSubmissions(challengeId: number, userId: string): Promise<(Submission & { challengeTitle: string | null; difficulty: string | null; completionTime: number | null; })[]> {
     return await db
-      .select()
+      .select({
+        id: submissions.id,
+        userId: submissions.userId,
+        challengeId: submissions.challengeId,
+        battleId: submissions.battleId,
+        architecture: submissions.architecture,
+        status: submissions.status,
+        score: submissions.score,
+        feedback: submissions.feedback,
+        submissionTime: submissions.submissionTime,
+        challengeTitle: challenges.title,
+        difficulty: challenges.difficulty,
+        completionTime: battles.timeSpent,
+      })
       .from(submissions)
+      .leftJoin(challenges, eq(submissions.challengeId, challenges.id))
+      .leftJoin(battles, eq(submissions.battleId, battles.id))
       .where(
         and(
           eq(submissions.challengeId, challengeId),
