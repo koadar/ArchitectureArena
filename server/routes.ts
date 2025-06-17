@@ -244,7 +244,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 // Helper functions for auto-completion
 function generateOptimalArchitecture(challenge: any) {
-  const { difficulty } = challenge;
+  const { difficulty, title } = challenge;
+
+  // Special case for the Ride Sharing Service challenge
+  if (title === 'Ride Sharing Service') {
+    return {
+      nodes: [
+        { id: '1', type: 'component', position: { x: 500, y: 20 }, data: { label: 'Mobile / Web Client', icon: '📱', color: 'border-teal-400' } },
+        { id: '2', type: 'component', position: { x: 500, y: 80 }, data: { label: 'CDN', icon: '🌐', color: 'border-sky-400' } },
+        { id: '3', type: 'component', position: { x: 500, y: 140 }, data: { label: 'API Gateway', icon: '🚪', color: 'border-cyan-400' } },
+        { id: '4', type: 'component', position: { x: 200, y: 260 }, data: { label: 'Auth Service', icon: '🔐', color: 'border-blue-400' } },
+        { id: '5', type: 'component', position: { x: 400, y: 260 }, data: { label: 'User Service', icon: '👤', color: 'border-green-400' } },
+        { id: '6', type: 'component', position: { x: 600, y: 260 }, data: { label: 'Driver Service', icon: '🚗', color: 'border-purple-400' } },
+        { id: '7', type: 'component', position: { x: 800, y: 260 }, data: { label: 'Trip Service', icon: '🏁', color: 'border-orange-500' } },
+        { id: '8', type: 'component', position: { x: 1000, y: 260 }, data: { label: 'Admin Service', icon: '🛠️', color: 'border-gray-500' } },
+        { id: '9', type: 'component', position: { x: 300, y: 380 }, data: { label: 'Ride Matching', icon: '🔄', color: 'border-yellow-500' } },
+        { id: '10', type: 'component', position: { x: 500, y: 380 }, data: { label: 'Pricing Engine', icon: '💹', color: 'border-red-500' } },
+        { id: '11', type: 'component', position: { x: 700, y: 380 }, data: { label: 'Surge Engine', icon: '⚡', color: 'border-red-400' } },
+        { id: '12', type: 'component', position: { x: 900, y: 380 }, data: { label: 'Geo Service', icon: '🌍', color: 'border-indigo-500' } },
+        { id: '13', type: 'component', position: { x: 1100, y: 380 }, data: { label: 'Location Tracking', icon: '📍', color: 'border-indigo-400' } },
+        { id: '14', type: 'component', position: { x: 1300, y: 380 }, data: { label: 'ETA Service', icon: '⏱️', color: 'border-indigo-300' } },
+        { id: '15', type: 'component', position: { x: 300, y: 500 }, data: { label: 'Payment Service', icon: '💳', color: 'border-emerald-500' } },
+        { id: '16', type: 'component', position: { x: 500, y: 500 }, data: { label: 'Wallet Service', icon: '👛', color: 'border-emerald-400' } },
+        { id: '17', type: 'component', position: { x: 700, y: 500 }, data: { label: 'Fraud Detection', icon: '🔎', color: 'border-rose-500' } },
+        { id: '18', type: 'component', position: { x: 900, y: 500 }, data: { label: 'Notification Svc', icon: '📩', color: 'border-amber-500' } },
+        { id: '19', type: 'component', position: { x: 400, y: 620 }, data: { label: 'Kafka Event Bus', icon: '🔃', color: 'border-fuchsia-400' } },
+        { id: '20', type: 'component', position: { x: 600, y: 620 }, data: { label: 'Service Mesh', icon: '🕸️', color: 'border-blue-300' } },
+        { id: '21', type: 'component', position: { x: 800, y: 620 }, data: { label: 'Monitoring', icon: '📈', color: 'border-lime-400' } },
+        { id: '22', type: 'component', position: { x: 1000, y: 620 }, data: { label: 'Central Logging', icon: '📜', color: 'border-lime-500' } },
+        { id: '23', type: 'component', position: { x: 1200, y: 620 }, data: { label: 'Metrics & Alerting', icon: '📊', color: 'border-lime-300' } },
+        { id: '24', type: 'component', position: { x: 200, y: 740 }, data: { label: 'User DB', icon: '🗃️', color: 'border-pink-500' } },
+        { id: '25', type: 'component', position: { x: 400, y: 740 }, data: { label: 'Driver DB', icon: '🗃️', color: 'border-pink-500' } },
+        { id: '26', type: 'component', position: { x: 600, y: 740 }, data: { label: 'Trip DB', icon: '🗃️', color: 'border-pink-500' } },
+        { id: '27', type: 'component', position: { x: 800, y: 740 }, data: { label: 'Location TSDB', icon: '⏰', color: 'border-pink-500' } },
+        { id: '28', type: 'component', position: { x: 1000, y: 740 }, data: { label: 'Redis Cache', icon: '⚡', color: 'border-yellow-400' } },
+        { id: '29', type: 'component', position: { x: 1200, y: 740 }, data: { label: 'Search Index', icon: '🔍', color: 'border-purple-300' } },
+        { id: '30', type: 'component', position: { x: 1400, y: 740 }, data: { label: 'Data Lake', icon: '💾', color: 'border-gray-400' } }
+      ],
+      edges: [
+        { id: 'e1-2', source: '1', target: '2', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e2-3', source: '2', target: '3', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-4', source: '3', target: '4', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-5', source: '3', target: '5', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-6', source: '3', target: '6', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-7', source: '3', target: '7', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-8', source: '3', target: '8', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e3-15', source: '3', target: '15', style: { stroke: '#00D1FF', strokeWidth: 2 }, animated: true },
+        { id: 'e7-9', source: '7', target: '9', style: { stroke: '#FF6B00', strokeWidth: 2 }, animated: true },
+        { id: 'e9-6', source: '9', target: '6', style: { stroke: '#FF6B00', strokeWidth: 2 }, animated: true },
+        { id: 'e9-10', source: '9', target: '10', style: { stroke: '#FF6B00', strokeWidth: 2 }, animated: true },
+        { id: 'e10-11', source: '10', target: '11', style: { stroke: '#FF6B00', strokeWidth: 2 }, animated: true },
+        { id: 'e11-9', source: '11', target: '9', style: { stroke: '#FF6B00', strokeWidth: 2 }, animated: true },
+        { id: 'e12-29', source: '12', target: '29', style: { stroke: '#6C63FF', strokeWidth: 2 }, animated: true },
+        { id: 'e13-9', source: '13', target: '9', style: { stroke: '#6C63FF', strokeWidth: 2 }, animated: true },
+        { id: 'e13-27', source: '13', target: '27', style: { stroke: '#6C63FF', strokeWidth: 2 }, animated: true },
+        { id: 'e14-13', source: '14', target: '13', style: { stroke: '#6C63FF', strokeWidth: 2 }, animated: true },
+        { id: 'e15-17', source: '15', target: '17', style: { stroke: '#00FFAA', strokeWidth: 2 }, animated: true },
+        { id: 'e15-16', source: '15', target: '16', style: { stroke: '#00FFAA', strokeWidth: 2 }, animated: true },
+        { id: 'e16-5', source: '16', target: '5', style: { stroke: '#00FFAA', strokeWidth: 2 }, animated: true },
+        { id: 'e9-19', source: '9', target: '19', style: { stroke: '#B580FF', strokeWidth: 2 }, animated: true },
+        { id: 'e13-19', source: '13', target: '19', style: { stroke: '#B580FF', strokeWidth: 2 }, animated: true },
+        { id: 'e18-19', source: '18', target: '19', style: { stroke: '#B580FF', strokeWidth: 2 }, animated: true },
+        { id: 'e19-18', source: '19', target: '18', style: { stroke: '#B580FF', strokeWidth: 2 }, animated: true },
+        { id: 'e4-24', source: '4', target: '24', style: { stroke: '#E91E63', strokeWidth: 2 }, animated: true },
+        { id: 'e5-24', source: '5', target: '24', style: { stroke: '#E91E63', strokeWidth: 2 }, animated: true },
+        { id: 'e6-25', source: '6', target: '25', style: { stroke: '#E91E63', strokeWidth: 2 }, animated: true },
+        { id: 'e7-26', source: '7', target: '26', style: { stroke: '#E91E63', strokeWidth: 2 }, animated: true },
+        { id: 'e13-27', source: '13', target: '27', style: { stroke: '#E91E63', strokeWidth: 2 }, animated: true },
+        { id: 'e9-28', source: '9', target: '28', style: { stroke: '#FFD600', strokeWidth: 2 }, animated: true },
+        { id: 'e10-28', source: '10', target: '28', style: { stroke: '#FFD600', strokeWidth: 2 }, animated: true },
+        { id: 'e19-30', source: '19', target: '30', style: { stroke: '#888888', strokeWidth: 2 }, animated: true },
+        { id: 'e20-9', source: '20', target: '9', style: { stroke: '#8BC34A', strokeWidth: 2 }, animated: true },
+        { id: 'e20-7', source: '20', target: '7', style: { stroke: '#8BC34A', strokeWidth: 2 }, animated: true },
+        { id: 'e21-22', source: '21', target: '22', style: { stroke: '#8BC34A', strokeWidth: 2 }, animated: true },
+        { id: 'e22-23', source: '22', target: '23', style: { stroke: '#8BC34A', strokeWidth: 2 }, animated: true }
+      ]
+    };
+  }
 
   const edgeStyle = { stroke: '#00D1FF', strokeWidth: 2 };
 
