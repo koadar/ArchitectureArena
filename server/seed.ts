@@ -429,6 +429,794 @@ EXPIRE user:123:status 300
         }
       ]
     }
+  },
+  {
+    challengeId: 3,
+    title: "Social Media Feed Architecture",
+    complexity: "EXPERT",
+    estimatedReadTime: 25,
+    keyInsights: [
+      "Implement hybrid push-pull model for optimal feed generation",
+      "Use machine learning for content ranking and personalization",
+      "Deploy graph databases for social relationship management",
+      "Implement event-driven architecture for real-time updates",
+      "Use distributed caching for sub-200ms feed latency"
+    ],
+    content: `# Social Media Feed System Design
+
+## System Scale
+- 100M active users
+- 500M posts per day
+- <200ms feed generation latency
+- Personalized content ranking
+
+## Architecture Components
+
+### 1. Feed Generation
+- **Timeline Service**: Generates personalized feeds
+- **Ranking Algorithm**: ML-based content scoring
+- **Fan-out Service**: Distributes posts to followers
+
+### 2. Content Storage
+- **Post Database**: Distributed SQL for post metadata
+- **Media Storage**: CDN + Object storage for images/videos
+- **Graph Database**: Neo4j for social relationships
+
+### 3. Real-time Updates
+- **Event Stream**: Kafka for real-time notifications
+- **WebSocket Service**: Live feed updates
+- **Push Notifications**: Mobile engagement
+
+## Feed Generation Strategies
+
+### Push Model (Fan-out on Write)
+- Pre-compute feeds when posts are created
+- Fast read performance
+- High storage overhead for popular users
+
+### Pull Model (Fan-out on Read)
+- Generate feeds on request
+- Lower storage cost
+- Higher read latency
+
+### Hybrid Approach
+- Push for regular users (<1000 followers)
+- Pull for celebrities (>1M followers)
+- Combine approaches for optimal performance
+
+## Database Design
+
+### Posts Table
+\`\`\`sql
+CREATE TABLE posts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  content TEXT,
+  media_urls TEXT[],
+  created_at TIMESTAMP DEFAULT NOW(),
+  engagement_score FLOAT DEFAULT 0,
+  visibility VARCHAR(20) DEFAULT 'public'
+);
+\`\`\`
+
+### Timeline Cache (Redis)
+\`\`\`redis
+ZADD timeline:user:123 1634567890 post:456
+EXPIRE timeline:user:123 86400
+\`\`\`
+
+## Machine Learning Pipeline
+
+### Content Ranking
+- User engagement history
+- Content similarity scores
+- Temporal relevance decay
+- Social signals (likes, shares, comments)
+
+### Personalization Features
+- User interests and preferences
+- Social graph analysis
+- Behavioral patterns
+- Content consumption history
+
+## Performance Optimizations
+
+### Caching Strategy
+- **L1 Cache**: Application-level feed cache
+- **L2 Cache**: Redis distributed cache
+- **L3 Cache**: CDN for media content
+
+### Database Optimization
+- Read replicas for feed queries
+- Sharding by user_id
+- Denormalized views for fast reads`,
+    optimalArchitecture: {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "component",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "API Gateway", "type": "service" }
+        },
+        {
+          "id": "2",
+          "type": "component",
+          "position": { "x": 300, "y": 50 },
+          "data": { "label": "Timeline Service", "type": "service" }
+        },
+        {
+          "id": "3",
+          "type": "component",
+          "position": { "x": 300, "y": 150 },
+          "data": { "label": "Fan-out Service", "type": "service" }
+        },
+        {
+          "id": "4",
+          "type": "component",
+          "position": { "x": 500, "y": 50 },
+          "data": { "label": "Redis Cache", "type": "database" }
+        },
+        {
+          "id": "5",
+          "type": "component",
+          "position": { "x": 500, "y": 150 },
+          "data": { "label": "PostgreSQL", "type": "database" }
+        },
+        {
+          "id": "6",
+          "type": "component",
+          "position": { "x": 700, "y": 100 },
+          "data": { "label": "ML Ranking", "type": "service" }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "1",
+          "target": "2",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e1-3",
+          "source": "1",
+          "target": "3",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-4",
+          "source": "2",
+          "target": "4",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3-5",
+          "source": "3",
+          "target": "5",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-6",
+          "source": "2",
+          "target": "6",
+          "type": "smoothstep"
+        }
+      ]
+    }
+  },
+  {
+    challengeId: 4,
+    title: "Netflix for Mars - Interplanetary Streaming",
+    complexity: "LEGENDARY",
+    estimatedReadTime: 35,
+    keyInsights: [
+      "Pre-position content using predictive algorithms",
+      "Implement differential synchronization for bandwidth optimization",
+      "Use erasure coding for data integrity across space",
+      "Deploy edge computing nodes on Mars surface",
+      "Create autonomous content curation system"
+    ],
+    content: `# Netflix for Mars System Design
+
+## Unique Constraints
+- 4-24 minute communication delay
+- Limited bandwidth (1-100 Mbps)
+- Intermittent connectivity
+- Radiation-induced data corruption
+- Power constraints on Mars
+
+## Architecture Overview
+
+### Earth Infrastructure
+- **Content Origin**: Master content repository
+- **Mission Control**: System monitoring and control
+- **Uplink Scheduler**: Optimizes data transmission windows
+- **ML Predictor**: Predicts Mars viewing preferences
+
+### Mars Infrastructure
+- **Local CDN**: Distributed content cache
+- **Edge Servers**: Surface-based computing nodes
+- **Offline Player**: Standalone playback system
+- **Sync Service**: Handles content synchronization
+
+### Space Communication
+- **Deep Space Network**: Primary communication channel
+- **Relay Satellites**: Mars orbit communication hubs
+- **Error Correction**: Advanced FEC coding
+- **Compression Engine**: Adaptive bitrate encoding
+
+## Content Strategy
+
+### Pre-positioning Algorithm
+\`\`\`python
+def predict_content_demand():
+    factors = [
+        user_viewing_history,
+        seasonal_preferences,
+        crew_rotation_schedule,
+        earth_trending_content,
+        psychological_factors
+    ]
+    return ml_model.predict(factors)
+\`\`\`
+
+### Differential Sync
+- Only sync content changes/deltas
+- Prioritize by predicted demand
+- Compress aggressively (90%+ reduction)
+- Use bloom filters for efficient checking
+
+## Storage Architecture
+
+### Mars Local Storage
+- **Hot Storage**: SSD for actively watched content
+- **Cold Storage**: HDD for archived content  
+- **Distributed Storage**: Across multiple Mars locations
+- **Redundancy**: 3x replication with erasure coding
+
+### Content Catalog
+\`\`\`sql
+CREATE TABLE mars_content (
+  id UUID PRIMARY KEY,
+  title VARCHAR(255),
+  size_gb NUMERIC,
+  priority_score FLOAT,
+  last_accessed TIMESTAMP,
+  sync_status VARCHAR(20),
+  earth_version_hash VARCHAR(64)
+);
+\`\`\`
+
+## Synchronization Protocol
+
+### Communication Windows
+- **Optimal Windows**: When Mars-Earth alignment is best
+- **Emergency Sync**: Critical updates during suboptimal windows
+- **Batch Processing**: Accumulate changes between windows
+
+### Error Recovery
+- **Forward Error Correction**: Reed-Solomon coding
+- **Automatic Retry**: Exponential backoff with jitter
+- **Partial Recovery**: Resume interrupted transfers
+- **Integrity Checks**: SHA-256 verification
+
+## Offline Capabilities
+
+### Autonomous Operation
+- 6-month fully offline capability
+- Local content recommendation engine
+- User preference learning
+- Automatic quality adjustment
+
+### Content Curation
+- AI-driven content selection
+- Mood-based recommendations
+- Social viewing patterns
+- Cultural event integration
+
+## Performance Optimizations
+
+### Bandwidth Management
+- **Adaptive Streaming**: Dynamic quality adjustment
+- **Predictive Caching**: ML-based content pre-loading
+- **Compression**: H.265/AV1 with custom profiles
+- **Deduplication**: Cross-content similarity detection
+
+### Power Optimization
+- **Sleep Scheduling**: Power-aware content sync
+- **Quality Scaling**: Lower quality during power constraints
+- **Processing Offload**: Use Earth resources when possible`,
+    optimalArchitecture: {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "component",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Earth Content Origin", "type": "service" }
+        },
+        {
+          "id": "2",
+          "type": "component",
+          "position": { "x": 300, "y": 100 },
+          "data": { "label": "Deep Space Network", "type": "infrastructure" }
+        },
+        {
+          "id": "3",
+          "type": "component",
+          "position": { "x": 500, "y": 100 },
+          "data": { "label": "Mars Relay Satellites", "type": "infrastructure" }
+        },
+        {
+          "id": "4",
+          "type": "component",
+          "position": { "x": 700, "y": 50 },
+          "data": { "label": "Mars Edge CDN", "type": "service" }
+        },
+        {
+          "id": "5",
+          "type": "component",
+          "position": { "x": 700, "y": 150 },
+          "data": { "label": "Mars Storage", "type": "database" }
+        },
+        {
+          "id": "6",
+          "type": "component",
+          "position": { "x": 900, "y": 100 },
+          "data": { "label": "Offline Player", "type": "service" }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "1",
+          "target": "2",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-3",
+          "source": "2",
+          "target": "3",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3-4",
+          "source": "3",
+          "target": "4",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4-5",
+          "source": "4",
+          "target": "5",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4-6",
+          "source": "4",
+          "target": "6",
+          "type": "smoothstep"
+        }
+      ]
+    }
+  },
+  {
+    challengeId: 5,
+    title: "E-commerce Search Engine Architecture",
+    complexity: "ADVANCED",
+    estimatedReadTime: 20,
+    keyInsights: [
+      "Use Elasticsearch with custom analyzers for fuzzy search",
+      "Implement real-time inventory sync with event sourcing",
+      "Deploy ML-based personalization with collaborative filtering",
+      "Use Redis for sub-100ms search result caching",
+      "Implement A/B testing framework for search ranking"
+    ],
+    content: `# E-commerce Search Engine Design
+
+## Requirements
+- 10M products in catalog
+- <100ms search latency
+- Personalized recommendations  
+- Real-time inventory updates
+- Advanced filtering and sorting
+
+## Search Architecture
+
+### Search Engine (Elasticsearch)
+- **Custom Analyzers**: Handle product names, descriptions
+- **Fuzzy Matching**: Typo tolerance and phonetic search
+- **Faceted Search**: Dynamic filtering by attributes
+- **Auto-complete**: Real-time search suggestions
+
+### Index Structure
+\`\`\`json
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "product_analyzer"
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "price": {
+        "type": "scaled_float",
+        "scaling_factor": 100
+      },
+      "inventory_count": {
+        "type": "integer"
+      },
+      "rating": {
+        "type": "float"
+      }
+    }
+  }
+}
+\`\`\`
+
+## Personalization Engine
+
+### User Profiling
+- **Behavioral Data**: Search history, clicks, purchases
+- **Demographic Data**: Age, location, preferences
+- **Session Data**: Current session context
+- **Real-time Updates**: Streaming profile updates
+
+### Recommendation Algorithms
+- **Collaborative Filtering**: User-based and item-based
+- **Content-Based**: Product feature similarity
+- **Matrix Factorization**: Latent factor modeling
+- **Deep Learning**: Neural collaborative filtering
+
+## Real-time Inventory
+
+### Event Sourcing Pattern
+\`\`\`python
+class InventoryEvent:
+    def __init__(self, product_id, quantity_change, timestamp):
+        self.product_id = product_id
+        self.quantity_change = quantity_change
+        self.timestamp = timestamp
+
+def update_search_index(event):
+    elasticsearch.update(
+        index='products',
+        id=event.product_id,
+        body={'doc': {'inventory_count': get_current_inventory(event.product_id)}}
+    )
+\`\`\`
+
+### Data Pipeline
+- **Kafka Streams**: Real-time inventory events
+- **Change Data Capture**: Database change monitoring
+- **Elasticsearch Sync**: Index updates within seconds
+- **Cache Invalidation**: Clear stale search results
+
+## Performance Optimization
+
+### Caching Strategy
+- **Query Cache**: Redis for frequent searches
+- **Result Cache**: Pre-computed popular queries
+- **Filter Cache**: Cached facet counts
+- **Personalization Cache**: User-specific recommendations
+
+### Search Optimization
+- **Index Sharding**: Distribute across multiple nodes
+- **Replica Sets**: Read scaling and high availability
+- **Query Optimization**: Efficient query structures
+- **Bulk Operations**: Batch index updates
+
+## A/B Testing Framework
+
+### Experiment Design
+- **Search Ranking**: Different scoring algorithms
+- **UI Components**: Search result layouts
+- **Personalization**: Recommendation strategies
+- **Performance**: Caching vs real-time trade-offs
+
+### Metrics Collection
+- **Click-through Rate**: Search result effectiveness
+- **Conversion Rate**: Search to purchase funnel
+- **Revenue Impact**: A/B test business metrics
+- **User Engagement**: Time spent, pages viewed`,
+    optimalArchitecture: {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "component",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Search API", "type": "service" }
+        },
+        {
+          "id": "2",
+          "type": "component",
+          "position": { "x": 300, "y": 50 },
+          "data": { "label": "Elasticsearch", "type": "database" }
+        },
+        {
+          "id": "3",
+          "type": "component",
+          "position": { "x": 300, "y": 150 },
+          "data": { "label": "Redis Cache", "type": "database" }
+        },
+        {
+          "id": "4",
+          "type": "component",
+          "position": { "x": 500, "y": 100 },
+          "data": { "label": "ML Recommender", "type": "service" }
+        },
+        {
+          "id": "5",
+          "type": "component",
+          "position": { "x": 700, "y": 100 },
+          "data": { "label": "Inventory Service", "type": "service" }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "1",
+          "target": "2",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e1-3",
+          "source": "1",
+          "target": "3",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e1-4",
+          "source": "1",
+          "target": "4",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e1-5",
+          "source": "1",
+          "target": "5",
+          "type": "smoothstep"
+        }
+      ]
+    }
+  },
+  {
+    challengeId: 6,
+    title: "Ride Sharing Service Architecture",
+    complexity: "EXPERT",
+    estimatedReadTime: 25,
+    keyInsights: [
+      "Use geospatial indexing (R-tree, Quadtree) for driver matching",
+      "Implement event-driven architecture for real-time tracking",
+      "Deploy machine learning for dynamic pricing algorithms",
+      "Use WebSocket connections for live location updates",
+      "Implement circuit breakers for payment service resilience"
+    ],
+    content: `# Ride Sharing Service Design
+
+## Core Requirements
+- 100K concurrent rides
+- <30s driver-rider matching
+- 10m location accuracy
+- Dynamic pricing (surge)
+- Payment processing integration
+
+## Geospatial Architecture
+
+### Location Services
+- **GPS Tracking**: Real-time driver/rider positions
+- **Geospatial Indexing**: R-tree for efficient range queries
+- **Map Services**: Integration with Google Maps/OpenStreetMap
+- **Route Optimization**: A* algorithm with traffic data
+
+### Matching Algorithm
+\`\`\`python
+def find_nearby_drivers(rider_location, radius=5km):
+    # Use geospatial index for O(log n) lookup
+    drivers = geospatial_index.range_query(
+        center=rider_location,
+        radius=radius
+    )
+    
+    # Score drivers by distance, rating, ETA
+    scored_drivers = []
+    for driver in drivers:
+        score = calculate_match_score(driver, rider_location)
+        scored_drivers.append((driver, score))
+    
+    return sorted(scored_drivers, key=lambda x: x[1], reverse=True)
+\`\`\`
+
+## Real-time Communication
+
+### WebSocket Architecture
+- **Connection Manager**: Handle driver/rider connections
+- **Location Broker**: Distribute position updates
+- **Trip Coordinator**: Manage ride lifecycle
+- **Notification Service**: Push updates to mobile apps
+
+### Event-Driven Design
+- **Ride Requested**: Trigger driver matching
+- **Driver Assigned**: Update both parties
+- **Trip Started**: Begin tracking and billing
+- **Trip Completed**: Process payment and ratings
+
+## Dynamic Pricing Engine
+
+### Surge Algorithm
+\`\`\`python
+def calculate_surge_multiplier(area, time):
+    demand = get_ride_requests(area, time)
+    supply = get_available_drivers(area)
+    
+    demand_supply_ratio = demand / max(supply, 1)
+    
+    # Exponential surge curve
+    if demand_supply_ratio > 2.0:
+        return min(demand_supply_ratio * 0.5, 5.0)  # Cap at 5x
+    else:
+        return 1.0  # No surge
+\`\`\`
+
+### Price Optimization
+- **Historical Data**: Past pricing and demand patterns
+- **Weather Impact**: Rain/snow increases demand
+- **Event Detection**: Concerts, games, airport delays
+- **Competitor Analysis**: Market pricing intelligence
+
+## Payment Processing
+
+### Payment Flow
+1. **Pre-authorization**: Hold funds at trip start
+2. **Fare Calculation**: Distance + time + surge
+3. **Payment Capture**: Charge actual fare
+4. **Driver Payout**: Transfer to driver account
+5. **Dispute Handling**: Refund/adjustment process
+
+### Payment Architecture
+- **Payment Gateway**: Stripe, PayPal integration
+- **Wallet Service**: Store payment methods
+- **Fraud Detection**: ML-based risk scoring
+- **PCI Compliance**: Secure data handling
+
+## Database Design
+
+### Trip Management
+\`\`\`sql
+CREATE TABLE trips (
+  id UUID PRIMARY KEY,
+  rider_id UUID NOT NULL,
+  driver_id UUID,
+  pickup_location GEOGRAPHY(POINT),
+  dropoff_location GEOGRAPHY(POINT),
+  status VARCHAR(20),
+  fare_amount DECIMAL(10,2),
+  surge_multiplier DECIMAL(3,2),
+  created_at TIMESTAMP,
+  completed_at TIMESTAMP
+);
+
+CREATE INDEX idx_trips_location ON trips 
+USING GIST (pickup_location);
+\`\`\`
+
+### Driver Tracking
+\`\`\`sql
+CREATE TABLE driver_locations (
+  driver_id UUID,
+  location GEOGRAPHY(POINT),
+  bearing INTEGER,
+  speed DECIMAL(5,2),
+  updated_at TIMESTAMP,
+  PRIMARY KEY (driver_id, updated_at)
+);
+\`\`\`
+
+## Scalability Solutions
+
+### Horizontal Scaling
+- **Geographic Sharding**: Partition by city/region
+- **Service Decomposition**: Separate matching, payment, tracking
+- **Load Balancing**: Distribute traffic across regions
+- **Auto-scaling**: Dynamic capacity based on demand
+
+### Performance Optimization
+- **Location Caching**: Redis for active driver positions
+- **Route Caching**: Pre-computed common routes
+- **Database Partitioning**: Time-based trip partitioning
+- **CDN Integration**: Static map tiles and assets
+
+## Reliability & Monitoring
+
+### Circuit Breakers
+- **Payment Service**: Fallback to cash payments
+- **Map Service**: Use cached routes
+- **Notification Service**: Queue for retry
+- **Driver Matching**: Expand search radius
+
+### Monitoring Metrics
+- **Matching Time**: Average time to find driver
+- **Success Rate**: Completed vs cancelled trips
+- **Payment Failures**: Transaction error rates
+- **Location Accuracy**: GPS precision metrics`,
+    optimalArchitecture: {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "component",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Mobile Apps", "type": "client" }
+        },
+        {
+          "id": "2",
+          "type": "component",
+          "position": { "x": 300, "y": 100 },
+          "data": { "label": "API Gateway", "type": "service" }
+        },
+        {
+          "id": "3",
+          "type": "component",
+          "position": { "x": 500, "y": 50 },
+          "data": { "label": "Matching Service", "type": "service" }
+        },
+        {
+          "id": "4",
+          "type": "component",
+          "position": { "x": 500, "y": 150 },
+          "data": { "label": "Location Service", "type": "service" }
+        },
+        {
+          "id": "5",
+          "type": "component",
+          "position": { "x": 700, "y": 50 },
+          "data": { "label": "Payment Service", "type": "service" }
+        },
+        {
+          "id": "6",
+          "type": "component",
+          "position": { "x": 700, "y": 150 },
+          "data": { "label": "PostgreSQL", "type": "database" }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "1",
+          "target": "2",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-3",
+          "source": "2",
+          "target": "3",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-4",
+          "source": "2",
+          "target": "4",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2-5",
+          "source": "2",
+          "target": "5",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3-6",
+          "source": "3",
+          "target": "6",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4-6",
+          "source": "4",
+          "target": "6",
+          "type": "smoothstep"
+        }
+      ]
+    }
   }
 ];
 

@@ -126,7 +126,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/editorials/challenge/:challengeId", async (req, res) => {
+  app.get("/api/editorials/:challengeId", async (req, res) => {
     try {
       const challengeId = parseInt(req.params.challengeId);
       const editorial = await storage.getEditorial(challengeId);

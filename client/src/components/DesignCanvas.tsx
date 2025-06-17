@@ -25,7 +25,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Challenge } from '@shared/schema';
-import EditorialPanel from "./EditorialPanel";
+// Editorial panel is now integrated inline
 
 interface DesignCanvasProps {
   architecture: any;
@@ -121,28 +121,34 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
     onChange({ nodes, edges });
   }, [nodes, edges, onChange]);
 
-  // Auto-complete architecture mutation
+  // Auto-complete mutation
   const autoCompleteMutation = useMutation({
     mutationFn: async () => {
-      return await fetch(`/api/challenges/${challenge.id}/auto-complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }).then(res => res.json());
+      const response = await fetch(`/api/challenges/${challenge.id}/auto-complete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to auto-complete');
+      }
+      return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       if (data.architecture) {
         setNodes(data.architecture.nodes || []);
         setEdges(data.architecture.edges || []);
         toast({
-          title: "Architecture Generated",
-          description: "The optimal solution has been applied to your canvas.",
+          title: "Architecture Auto-Completed",
+          description: "Optimal architecture has been generated for this challenge.",
         });
       }
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to generate architecture. Please try again.",
+        title: "Auto-Complete Failed",
+        description: "Could not generate architecture. Please try again.",
         variant: "destructive",
       });
     },
@@ -349,14 +355,53 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
           </CardContent>
         </Card>
 
+        {/* Auto-Complete Actions */}
+        <Card className="glassmorphism mb-4">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center">
+              <Wand2 className="w-4 h-4 mr-2 text-purple-400" />
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button
+              onClick={() => autoCompleteMutation.mutate()}
+              disabled={autoCompleteMutation.isPending}
+              className="w-full btn-cyber"
+              variant="outline"
+            >
+              {autoCompleteMutation.isPending ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Wand2 className="w-4 h-4 mr-2" />
+                  Auto-Complete Architecture
+                </>
+              )}
+            </Button>
+            
+            <Button
+              onClick={() => setShowEditorial(!showEditorial)}
+              className="w-full btn-cyber"
+              variant="outline"
+            >
+              <Lightbulb className="w-4 h-4 mr-2" />
+              {showEditorial ? 'Hide Hints' : 'Show Hints'}
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Challenge Info */}
         <Card className="glassmorphism">
           <CardHeader>
             <CardTitle className="text-sm">Challenge Info</CardTitle>
           </CardHeader>
           <CardContent>
-            <h3 className="font-semibold mb-2">{challenge.title}</h3>
-            <p className="text-xs text-gray-400 mb-4">{challenge.description}</p>
+            <h3 className="font-semibold mb-2 text-white bg-slate-800/50 p-2 rounded">{challenge.title}</h3>
+            <p className="text-xs text-gray-300 mb-4 bg-slate-800/30 p-2 rounded">{challenge.description}</p>
             
             {challenge.constraints && (
               <div>
