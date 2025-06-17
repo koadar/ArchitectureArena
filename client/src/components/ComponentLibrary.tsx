@@ -35,9 +35,17 @@ const componentCategories = [
 ];
 
 export default function ComponentLibrary() {
-  const onDragStart = (event: React.DragEvent, nodeType: string, label: string) => {
+  const onDragStart = (
+    event: React.DragEvent,
+    nodeType: string,
+    label: string,
+    icon: string,
+    color: string
+  ) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.setData('application/reactflow-label', label);
+    event.dataTransfer.setData('application/reactflow-icon', icon);
+    event.dataTransfer.setData('application/reactflow-color', color);
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -66,7 +74,15 @@ export default function ComponentLibrary() {
                   key={component.id}
                   variant="outline"
                   className={`h-16 flex flex-col items-center justify-center text-xs glassmorphism hover:neon-glow transition-all cursor-grab active:cursor-grabbing ${component.color} hover:${component.color.replace('border', 'bg')}/10`}
-                  onDragStart={(event) => onDragStart(event, component.id, component.name)}
+                  onDragStart={(event) =>
+                    onDragStart(
+                      event,
+                      component.id,
+                      component.name,
+                      component.icon,
+                      component.color
+                    )
+                  }
                   draggable
                 >
                   <span className="text-lg mb-1">{component.icon}</span>

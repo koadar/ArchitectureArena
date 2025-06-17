@@ -26,6 +26,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Challenge } from '@shared/schema';
 import EditorialPanel from './EditorialPanel';
+import ComponentNode from './ComponentNode';
 // Editorial panel is now integrated inline
 
 interface DesignCanvasProps {
@@ -36,45 +37,27 @@ interface DesignCanvasProps {
 
 // Custom node types
 const nodeTypes = {
-  // We'll use default nodes for now, but can extend later
+  component: ComponentNode,
 };
 
 const initialNodes: Node[] = [
   {
     id: '1',
-    type: 'default',
+    type: 'component',
     position: { x: 250, y: 100 },
-    data: { label: 'API Gateway' },
-    style: {
-      background: 'rgba(0, 209, 255, 0.1)',
-      border: '2px solid #00D1FF',
-      borderRadius: '8px',
-      color: '#fff',
-    },
+    data: { label: 'API Gateway', icon: '🚪', color: 'border-cyan-400' },
   },
   {
     id: '2',
-    type: 'default',
+    type: 'component',
     position: { x: 100, y: 250 },
-    data: { label: 'Database' },
-    style: {
-      background: 'rgba(255, 0, 140, 0.1)',
-      border: '2px solid #FF008C',
-      borderRadius: '8px',
-      color: '#fff',
-    },
+    data: { label: 'Database', icon: '🗃️', color: 'border-pink-500' },
   },
   {
     id: '3',
-    type: 'default',
+    type: 'component',
     position: { x: 400, y: 250 },
-    data: { label: 'Cache' },
-    style: {
-      background: 'rgba(255, 255, 0, 0.1)',
-      border: '2px solid #FFFF00',
-      borderRadius: '8px',
-      color: '#fff',
-    },
+    data: { label: 'Cache', icon: '⚡', color: 'border-yellow-400' },
   },
 ];
 
@@ -219,6 +202,8 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
 
       const type = event.dataTransfer.getData('application/reactflow');
       const label = event.dataTransfer.getData('application/reactflow-label');
+      const icon = event.dataTransfer.getData('application/reactflow-icon');
+      const color = event.dataTransfer.getData('application/reactflow-color');
 
       if (typeof type === 'undefined' || !type) {
         return;
@@ -231,16 +216,9 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
       
       const newNode: Node = {
         id: `${Date.now()}`,
-        type: 'default',
+        type: 'component',
         position,
-        data: { label },
-        style: {
-          background: 'rgba(0, 209, 255, 0.1)',
-          border: '2px solid #00D1FF',
-          borderRadius: '8px',
-          color: '#fff',
-          padding: '10px',
-        },
+        data: { label, icon, color },
       };
 
       setNodes((nds) => nds.concat(newNode));
