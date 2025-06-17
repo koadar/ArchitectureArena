@@ -20,6 +20,8 @@ export default function NavBar() {
 
   const navItems = [
     { href: "/", label: "Arena", active: location === "/" },
+    { href: "/tutorial", label: "Tutorial", active: location === "/tutorial" },
+    { href: "/submissions", label: "Submissions", active: location === "/submissions" },
     { href: "/leaderboard", label: "Leaderboard", active: location === "/leaderboard" },
   ];
 

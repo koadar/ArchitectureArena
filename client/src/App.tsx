@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Challenge from "@/pages/challenge";
 import Leaderboard from "@/pages/leaderboard";
 import Tutorial from "@/pages/tutorial";
+import Submissions from "@/pages/submissions";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,6 +25,7 @@ function Router() {
           <Route path="/challenge/:id" component={Challenge} />
           <Route path="/leaderboard" component={Leaderboard} />
           <Route path="/tutorial" component={Tutorial} />
+          <Route path="/submissions" component={Submissions} />
         </>
       )}
       <Route component={NotFound} />

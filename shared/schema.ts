@@ -75,6 +75,43 @@ export const leaderboard = pgTable("leaderboard", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Editorial solutions for challenges
+export const editorials = pgTable("editorials", {
+  id: serial("id").primaryKey(),
+  challengeId: integer("challenge_id").references(() => challenges.id).notNull(),
+  title: varchar("title").notNull(),
+  content: text("content").notNull(), // Detailed solution explanation
+  optimalArchitecture: jsonb("optimal_architecture").notNull(), // The optimal solution
+  keyInsights: text("key_insights").array(), // Array of key learning points
+  complexity: varchar("complexity").notNull(), // BEGINNER, INTERMEDIATE, ADVANCED
+  estimatedReadTime: integer("estimated_read_time").default(5), // in minutes
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User submissions for tracking progress
+export const submissions = pgTable("submissions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  challengeId: integer("challenge_id").references(() => challenges.id).notNull(),
+  battleId: integer("battle_id").references(() => battles.id),
+  architecture: jsonb("architecture").notNull(),
+  status: varchar("status").notNull(), // SUBMITTED, CORRECT, INCORRECT, PARTIAL
+  score: integer("score").default(0),
+  feedback: text("feedback"), // Automated feedback
+  submissionTime: timestamp("submission_time").defaultNow(),
+});
+
+// Tutorial progress tracking
+export const tutorialProgress = pgTable("tutorial_progress", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  stepId: varchar("step_id").notNull(), // Tutorial step identifier
+  completed: boolean("completed").default(false),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type Challenge = typeof challenges.$inferSelect;
@@ -82,6 +119,15 @@ export type InsertChallenge = typeof challenges.$inferInsert;
 export type Battle = typeof battles.$inferSelect;
 export type InsertBattle = typeof battles.$inferInsert;
 export type LeaderboardEntry = typeof leaderboard.$inferSelect;
+export type Editorial = typeof editorials.$inferSelect;
+export type InsertEditorial = typeof editorials.$inferInsert;
+export type Submission = typeof submissions.$inferSelect;
+export type InsertSubmission = typeof submissions.$inferInsert;
+export type TutorialProgress = typeof tutorialProgress.$inferSelect;
+export type InsertTutorialProgress = typeof tutorialProgress.$inferInsert;
 
 export const insertChallengeSchema = createInsertSchema(challenges);
 export const insertBattleSchema = createInsertSchema(battles);
+export const insertEditorialSchema = createInsertSchema(editorials);
+export const insertSubmissionSchema = createInsertSchema(submissions);
+export const insertTutorialProgressSchema = createInsertSchema(tutorialProgress);

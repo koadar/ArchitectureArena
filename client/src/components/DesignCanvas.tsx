@@ -17,7 +17,15 @@ import 'reactflow/dist/style.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Wand2, Eye, EyeOff, Lightbulb, BookOpen, Send } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import type { Challenge } from '@shared/schema';
+import EditorialPanel from "./EditorialPanel";
 
 interface DesignCanvasProps {
   architecture: any;
@@ -91,6 +99,7 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
   const [edges, setEdges, onEdgesChange] = useEdgesState(architecture?.edges || initialEdges);
   const [loadSlider, setLoadSlider] = useState([25]);
   const [simulationRunning, setSimulationRunning] = useState(false);
+  const [showEditorial, setShowEditorial] = useState(false);
   const [simulationMetrics, setSimulationMetrics] = useState({
     latency: 45,
     throughput: 2.5,
@@ -98,6 +107,9 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
   });
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -108,6 +120,66 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
   React.useEffect(() => {
     onChange({ nodes, edges });
   }, [nodes, edges, onChange]);
+
+  // Auto-complete architecture mutation
+  const autoCompleteMutation = useMutation({
+    mutationFn: async () => {
+      return await fetch(`/api/challenges/${challenge.id}/auto-complete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }).then(res => res.json());
+    },
+    onSuccess: (data) => {
+      if (data.architecture) {
+        setNodes(data.architecture.nodes || []);
+        setEdges(data.architecture.edges || []);
+        toast({
+          title: "Architecture Generated",
+          description: "The optimal solution has been applied to your canvas.",
+        });
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to generate architecture. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Submit solution mutation
+  const submitSolutionMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await fetch("/api/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challengeId: challenge.id,
+          architecture: { nodes, edges },
+          status: "SUBMITTED",
+        }),
+      }).then(res => res.json());
+    },
+    onSuccess: () => {
+      toast({
+        title: "Solution Submitted",
+        description: "Your architecture has been submitted for evaluation.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/submissions"] });
+    },
+  });
+
+  const handleApplyOptimalSolution = (optimalArchitecture: any) => {
+    if (optimalArchitecture?.nodes && optimalArchitecture?.edges) {
+      setNodes(optimalArchitecture.nodes);
+      setEdges(optimalArchitecture.edges);
+      toast({
+        title: "Solution Applied",
+        description: "The optimal architecture has been loaded to your canvas.",
+      });
+    }
+  };
 
   const runSimulation = () => {
     setSimulationRunning(true);
