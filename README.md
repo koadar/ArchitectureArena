@@ -51,9 +51,8 @@ REPLIT_CLIENT_SECRET=your_client_secret
 
 3. Initialize the database:
 ```bash
-npm run db:generate
-npm run db:migrate
-npm run db:seed
+npm run db:push
+npx tsx server/seed.ts   # optional
 ```
 
 4. Start the development server:

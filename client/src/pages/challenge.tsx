@@ -294,11 +294,11 @@ export default function Challenge() {
                       <div className="text-sm text-gray-400">Difficulty</div>
                     </div>
                   </div>
-                  {challenge.constraints && (
+                  {Boolean(challenge.constraints) && (
                     <div>
                       <h3 className="text-lg font-semibold mb-2">Constraints</h3>
                       <div className="bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto text-gray-300">
-                        {JSON.stringify(challenge.constraints, null, 2)}
+                        {JSON.stringify(challenge.constraints as any, null, 2)}
                       </div>
                     </div>
                   )}
