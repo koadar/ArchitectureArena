@@ -52,7 +52,7 @@ REPLIT_CLIENT_SECRET=your_client_secret
 3. Initialize the database:
 ```bash
 npm run db:push
-npx tsx server/seed.ts   # optional
+npm run db:seed   # optional
 ```
 
 4. Start the development server:
