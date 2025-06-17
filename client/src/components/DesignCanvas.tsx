@@ -90,13 +90,29 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
     cost: 12.34
   });
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { screenToFlowPosition } = useReactFlow();
+  const {
+    screenToFlowPosition,
+    getNodes,
+    getEdges,
+    setNodes: setFlowNodes,
+    setEdges: setFlowEdges,
+  } = useReactFlow();
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            style: { stroke: '#00D1FF', strokeWidth: 2 },
+            animated: true,
+          },
+          eds
+        )
+      ),
     [setEdges]
   );
 
@@ -195,6 +211,23 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
       });
     }, 3000);
   };
+
+  const deleteSelected = useCallback(() => {
+    const remainingNodes = getNodes().filter((n) => !n.selected);
+    const remainingEdges = getEdges().filter((e) => !e.selected);
+    setFlowNodes(remainingNodes);
+    setFlowEdges(remainingEdges);
+  }, [getNodes, getEdges, setFlowNodes, setFlowEdges]);
+
+  React.useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        deleteSelected();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [deleteSelected]);
 
   const onDrop = useCallback(
     (event: React.DragEvent) => {
@@ -366,7 +399,7 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
                 </>
               )}
             </Button>
-            
+
             <Button
               onClick={() => setShowEditorial(!showEditorial)}
               className="w-full btn-cyber"
@@ -374,6 +407,17 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
             >
               <Lightbulb className="w-4 h-4 mr-2" />
               {showEditorial ? 'Hide Hints' : 'Show Hints'}
+            </Button>
+
+            <Button
+              onClick={deleteSelected}
+              className="w-full btn-cyber"
+              variant="outline"
+            >
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6 8a1 1 0 011-1h6a1 1 0 011 1v8a1 1 0 01-1 1H7a1 1 0 01-1-1V8zm2-3a2 2 0 012-2h0a2 2 0 012 2v1H8V5z" clipRule="evenodd" />
+              </svg>
+              Delete Selected
             </Button>
           </CardContent>
         </Card>

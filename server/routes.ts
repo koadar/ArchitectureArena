@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertBattleSchema, insertEditorialSchema, insertSubmissionSchema, insertTutorialProgressSchema } from "@shared/schema";
+import { componentMeta } from "@shared/componentMeta";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -243,42 +244,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 // Helper functions for auto-completion
 function generateOptimalArchitecture(challenge: any) {
-  const { difficulty, constraints } = challenge;
-  
-  // Base architecture components
+  const { difficulty } = challenge;
+
+  const edgeStyle = { stroke: '#00D1FF', strokeWidth: 2 };
+
+  const makeNode = (id: string, type: string, position: { x: number; y: number }) => {
+    const meta = componentMeta[type] || { label: type, icon: '', color: 'border-cyan-400' };
+    return {
+      id,
+      type: 'component',
+      position,
+      data: { label: meta.label, icon: meta.icon, color: meta.color }
+    };
+  };
+
+  const makeEdge = (id: string, source: string, target: string) => ({
+    id,
+    source,
+    target,
+    style: edgeStyle,
+    animated: true
+  });
+
   const baseComponents = [
-    { id: '1', type: 'load-balancer', position: { x: 100, y: 50 }, data: { label: 'Load Balancer' } },
-    { id: '2', type: 'api-gateway', position: { x: 300, y: 50 }, data: { label: 'API Gateway' } },
-    { id: '3', type: 'microservice', position: { x: 500, y: 50 }, data: { label: 'User Service' } },
-    { id: '4', type: 'database', position: { x: 500, y: 200 }, data: { label: 'Database' } },
+    makeNode('1', 'load-balancer', { x: 100, y: 50 }),
+    makeNode('2', 'api-gateway', { x: 300, y: 50 }),
+    makeNode('3', 'microservice', { x: 500, y: 50 }),
+    makeNode('4', 'database', { x: 500, y: 200 }),
   ];
 
   const baseConnections = [
-    { id: 'e1-2', source: '1', target: '2' },
-    { id: 'e2-3', source: '2', target: '3' },
-    { id: 'e3-4', source: '3', target: '4' },
+    makeEdge('e1-2', '1', '2'),
+    makeEdge('e2-3', '2', '3'),
+    makeEdge('e3-4', '3', '4'),
   ];
 
   // Add complexity based on difficulty
   if (difficulty === 'MEDIUM' || difficulty === 'HARD') {
     baseComponents.push(
-      { id: '5', type: 'cache', position: { x: 700, y: 50 }, data: { label: 'Redis Cache' } },
-      { id: '6', type: 'queue', position: { x: 300, y: 200 }, data: { label: 'Message Queue' } }
+      makeNode('5', 'cache', { x: 700, y: 50 }),
+      makeNode('6', 'queue', { x: 300, y: 200 })
     );
     baseConnections.push(
-      { id: 'e3-5', source: '3', target: '5' },
-      { id: 'e2-6', source: '2', target: '6' }
+      makeEdge('e3-5', '3', '5'),
+      makeEdge('e2-6', '2', '6')
     );
   }
 
   if (difficulty === 'HARD' || difficulty === 'BOSS') {
     baseComponents.push(
-      { id: '7', type: 'monitoring', position: { x: 100, y: 200 }, data: { label: 'Monitoring' } },
-      { id: '8', type: 'cdn', position: { x: 100, y: 350 }, data: { label: 'CDN' } }
+      makeNode('7', 'monitoring', { x: 100, y: 200 }),
+      makeNode('8', 'cdn', { x: 100, y: 350 })
     );
     baseConnections.push(
-      { id: 'e1-7', source: '1', target: '7' },
-      { id: 'e8-1', source: '8', target: '1' }
+      makeEdge('e1-7', '1', '7'),
+      makeEdge('e8-1', '8', '1')
     );
   }
 
