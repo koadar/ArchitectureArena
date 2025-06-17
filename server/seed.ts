@@ -1142,40 +1142,70 @@ CREATE TABLE driver_locations (
     optimalArchitecture: {
       "nodes": [
         {
+          "id": "g-edge",
+          "type": "group",
+          "position": { "x": 60, "y": 60 },
+          "data": { "label": "Clients" },
+          "style": { "width": 180, "height": 160, "border": "2px dashed #0ea5e9" },
+          "extent": "parent"
+        },
+        {
+          "id": "g-services",
+          "type": "group",
+          "position": { "x": 260, "y": 40 },
+          "data": { "label": "Core Services" },
+          "style": { "width": 460, "height": 200, "border": "2px dashed #10b981" },
+          "extent": "parent"
+        },
+        {
+          "id": "g-data",
+          "type": "group",
+          "position": { "x": 740, "y": 120 },
+          "data": { "label": "Data Store" },
+          "style": { "width": 200, "height": 120, "border": "2px dashed #ec4899" },
+          "extent": "parent"
+        },
+        {
           "id": "1",
           "type": "component",
           "position": { "x": 100, "y": 100 },
-          "data": { "label": "Mobile Apps", "type": "client" }
+          "data": { "label": "Mobile Apps", "type": "client" },
+          "parentNode": "g-edge"
         },
         {
           "id": "2",
           "type": "component",
           "position": { "x": 300, "y": 100 },
-          "data": { "label": "API Gateway", "type": "service" }
+          "data": { "label": "API Gateway", "type": "service" },
+          "parentNode": "g-services"
         },
         {
           "id": "3",
           "type": "component",
           "position": { "x": 500, "y": 50 },
-          "data": { "label": "Matching Service", "type": "service" }
+          "data": { "label": "Matching Service", "type": "service" },
+          "parentNode": "g-services"
         },
         {
           "id": "4",
           "type": "component",
           "position": { "x": 500, "y": 150 },
-          "data": { "label": "Location Service", "type": "service" }
+          "data": { "label": "Location Service", "type": "service" },
+          "parentNode": "g-services"
         },
         {
           "id": "5",
           "type": "component",
           "position": { "x": 700, "y": 50 },
-          "data": { "label": "Payment Service", "type": "service" }
+          "data": { "label": "Payment Service", "type": "service" },
+          "parentNode": "g-services"
         },
         {
           "id": "6",
           "type": "component",
           "position": { "x": 700, "y": 150 },
-          "data": { "label": "PostgreSQL", "type": "database" }
+          "data": { "label": "PostgreSQL", "type": "database" },
+          "parentNode": "g-data"
         }
       ],
       "edges": [
