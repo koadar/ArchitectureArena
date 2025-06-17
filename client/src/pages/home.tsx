@@ -35,6 +35,20 @@ export default function Home() {
   const activeBattles = userBattles.filter((battle: any) => battle.status === "ACTIVE");
   const featuredChallenges = challenges.slice(0, 6);
 
+  const handleQuickBattle = () => {
+    if (challengesLoading || challenges.length === 0) return;
+    const randomChallenge =
+      challenges[Math.floor(Math.random() * challenges.length)];
+    window.location.href = `/challenge/${randomChallenge.id}`;
+  };
+
+  const handlePracticeMode = () => {
+    if (challengesLoading || challenges.length === 0) return;
+    const easyChallenge =
+      challenges.find((c) => c.difficulty === "EASY") || challenges[0];
+    window.location.href = `/challenge/${easyChallenge.id}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
       <NavBar />
@@ -112,14 +126,13 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card 
-                className="card-cyber hover:border-cyan-400 transition-colors cursor-pointer"
-                onClick={() => {
-                  if (challenges.length > 0) {
-                    const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-                    window.location.href = `/challenge/${randomChallenge.id}`;
-                  }
-                }}
+              <Card
+                className={`card-cyber hover:border-cyan-400 transition-colors ${
+                  challengesLoading || challenges.length === 0
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'cursor-pointer'
+                }`}
+                onClick={handleQuickBattle}
               >
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 cyber-gradient rounded-lg mx-auto mb-4 flex items-center justify-center">
@@ -132,14 +145,13 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card 
-                className="card-cyber hover:border-pink-400 transition-colors cursor-pointer"
-                onClick={() => {
-                  if (challenges.length > 0) {
-                    const easyChallenge = challenges.find(c => c.difficulty === 'EASY') || challenges[0];
-                    window.location.href = `/challenge/${easyChallenge.id}`;
-                  }
-                }}
+              <Card
+                className={`card-cyber hover:border-pink-400 transition-colors ${
+                  challengesLoading || challenges.length === 0
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'cursor-pointer'
+                }`}
+                onClick={handlePracticeMode}
               >
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-violet-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
