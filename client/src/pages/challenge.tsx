@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { Link } from "wouter";
 import type { Challenge, Battle } from "@shared/schema";
 
 export default function Challenge() {
@@ -21,11 +22,83 @@ export default function Challenge() {
   const [architecture, setArchitecture] = useState<any>(null);
   const [currentBattle, setCurrentBattle] = useState<Battle | null>(null);
 
+  // Auto-complete architecture based on challenge requirements
+  const generateOptimalArchitecture = () => {
+    if (!challenge) return;
+    
+    const optimalSolution = {
+      nodes: [
+        {
+          id: "1",
+          type: "component",
+          position: { x: 100, y: 100 },
+          data: { label: "Load Balancer", type: "infrastructure" }
+        },
+        {
+          id: "2", 
+          type: "component",
+          position: { x: 300, y: 100 },
+          data: { label: "Web Servers", type: "service" }
+        },
+        {
+          id: "3",
+          type: "component", 
+          position: { x: 500, y: 50 },
+          data: { label: "Cache Layer", type: "database" }
+        },
+        {
+          id: "4",
+          type: "component",
+          position: { x: 500, y: 150 },
+          data: { label: "Database", type: "database" }
+        },
+        {
+          id: "5",
+          type: "component",
+          position: { x: 700, y: 100 },
+          data: { label: "Analytics Service", type: "service" }
+        }
+      ],
+      edges: [
+        {
+          id: "e1-2",
+          source: "1",
+          target: "2",
+          type: "smoothstep"
+        },
+        {
+          id: "e2-3", 
+          source: "2",
+          target: "3",
+          type: "smoothstep"
+        },
+        {
+          id: "e2-4",
+          source: "2", 
+          target: "4",
+          type: "smoothstep"
+        },
+        {
+          id: "e2-5",
+          source: "2",
+          target: "5", 
+          type: "smoothstep"
+        }
+      ]
+    };
+    
+    setArchitecture(optimalSolution);
+    toast({
+      title: "Architecture Generated!",
+      description: "Complete solution architecture has been loaded. Study the design and customize as needed.",
+    });
+  };
+
   const { data: challenge, isLoading: challengeLoading } = useQuery<Challenge>({
     queryKey: [`/api/challenges/${challengeId}`],
   });
 
-  const { data: userBattles = [] } = useQuery({
+  const { data: userBattles = [] } = useQuery<Battle[]>({
     queryKey: ["/api/battles/user"],
   });
 
@@ -143,7 +216,7 @@ export default function Challenge() {
       const timeSpent = challenge ? (challenge.timeLimit * 60) - timeLeft : 0;
       updateBattleMutation.mutate({
         status: "COMPLETED",
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         timeSpent,
         architecture,
         score: calculateScore(),
@@ -244,6 +317,16 @@ export default function Challenge() {
                 </Button>
               ) : (
                 <div className="flex space-x-2">
+                  <Button asChild variant="outline" className="glassmorphism hover:neon-glow">
+                    <Link href={`/editorial/${challengeId}`}>View Editorial</Link>
+                  </Button>
+                  <Button 
+                    onClick={generateOptimalArchitecture}
+                    variant="outline"
+                    className="glassmorphism hover:neon-glow"
+                  >
+                    Auto-Complete
+                  </Button>
                   <Button 
                     onClick={handleSave}
                     variant="outline"
@@ -292,9 +375,9 @@ export default function Challenge() {
                   {challenge.constraints && (
                     <div>
                       <h3 className="text-lg font-semibold mb-2">Constraints</h3>
-                      <pre className="bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto">
+                      <div className="bg-gray-800 p-4 rounded-lg text-sm overflow-x-auto text-gray-300">
                         {JSON.stringify(challenge.constraints, null, 2)}
-                      </pre>
+                      </div>
                     </div>
                   )}
                 </CardContent>
