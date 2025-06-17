@@ -36,7 +36,7 @@ npm install
 
 2. Set up environment variables:
 ```bash
-# Database connection (automatically provided by Replit)
+# Database connection (use a standard PostgreSQL connection string)
 DATABASE_URL=postgresql://username:password@host:port/database
 PGHOST=localhost
 PGPORT=5432
