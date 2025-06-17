@@ -174,6 +174,11 @@ The design canvas includes these draggable components:
 **Monitoring**
 - Logging, Metrics, Alerting, Tracing
 
+### Canvas Tips
+
+- Drag components onto the canvas and connect them by dragging the node handles.
+- Press **Delete** or **Backspace** (or use the "Delete Selected" button) to remove selected items.
+
 ### Styling
 
 The application uses a cyber-themed design with:
