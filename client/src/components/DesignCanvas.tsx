@@ -25,6 +25,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Challenge } from '@shared/schema';
+import EditorialPanel from './EditorialPanel';
 // Editorial panel is now integrated inline
 
 interface DesignCanvasProps {
@@ -256,6 +257,11 @@ function DesignCanvasInner({ architecture, onChange, challenge }: DesignCanvasPr
     <div className="h-full flex">
       {/* Main Canvas */}
       <div className="flex-1 relative" ref={reactFlowWrapper}>
+        <EditorialPanel
+          challenge={challenge}
+          onClose={() => setShowEditorial(false)}
+          isVisible={showEditorial}
+        />
         <ReactFlow
           nodes={nodes}
           edges={edges}
